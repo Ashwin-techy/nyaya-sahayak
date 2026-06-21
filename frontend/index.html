@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nyaya Sahayak — Know Your Rights</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <!-- ============ TOP BAR ============ -->
+    <header class="topbar">
+        <div class="topbar-inner">
+            <div class="brand">
+                <span class="brand-mark" aria-hidden="true">
+                    <svg viewBox="0 0 48 48" width="30" height="30">
+                        <circle cx="24" cy="24" r="22" fill="none" stroke="currentColor" stroke-width="2" />
+                        <line x1="24" y1="8" x2="24" y2="40" stroke="currentColor" stroke-width="2" />
+                        <line x1="24" y1="12" x2="10" y2="20" stroke="currentColor" stroke-width="2" />
+                        <line x1="24" y1="12" x2="38" y2="20" stroke="currentColor" stroke-width="2" />
+                        <path d="M10 20 L6 28 a4 7 0 0 0 8 0 Z" fill="none" stroke="currentColor" stroke-width="1.6" />
+                        <path d="M38 20 L34 28 a4 7 0 0 0 8 0 Z" fill="none" stroke="currentColor" stroke-width="1.6" />
+                        <line x1="14" y1="40" x2="34" y2="40" stroke="currentColor" stroke-width="2" />
+                    </svg>
+                </span>
+                <div class="brand-text">
+                    <span class="brand-name">Nyaya Sahayak</span>
+                    <span class="brand-tagline">न्याय सहायक · Know Your Rights</span>
+                </div>
+            </div>
+
+            <nav class="topnav" id="topnav">
+                <!-- populated by JS based on auth state -->
+            </nav>
+
+            <button class="hamburger" id="hamburgerBtn" aria-label="Toggle menu" aria-expanded="false">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- ============ APP ROOT ============ -->
+    <main id="app" class="app-root"></main>
+
+    <!-- ============ TOAST ============ -->
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+    <!-- ============ TEMPLATES ============ -->
+
+    <template id="tpl-landing">
+        <section class="hero">
+            <div class="hero-inner">
+                <p class="hero-eyebrow">Free · Educational · Built for citizens &amp; tourists in India</p>
+                <h1 class="hero-title">Know whether it's <em>legal</em> before you find out the hard way.</h1>
+                <p class="hero-sub">Describe a real situation in plain language. Nyaya Sahayak checks it against a
+                    curated base of Indian laws and tells you what's actually true — verdict, rights, and what to do
+                    next.</p>
+                <div class="hero-actions">
+                    <button class="btn btn-primary btn-lg" data-route="register">Create free account</button>
+                    <button class="btn btn-ghost btn-lg" data-route="login">I already have an account</button>
+                </div>
+                <p class="hero-disclaimer">⚠ Educational tool only — not a substitute for a licensed advocate. Verify
+                    critical matters with a legal professional.</p>
+            </div>
+            <div class="hero-stamp" aria-hidden="true">
+                <div class="stamp stamp-legal stamp-float">LEGAL</div>
+            </div>
+        </section>
+
+        <section class="how-it-works">
+            <h2 class="section-title">How a search becomes an answer</h2>
+            <div class="steps-grid">
+                <div class="step-card">
+                    <span class="step-num">01</span>
+                    <h3>Describe the situation</h3>
+                    <p>Type it the way you'd say it out loud — no legal jargon needed.</p>
+                </div>
+                <div class="step-card">
+                    <span class="step-num">02</span>
+                    <h3>Engine matches the law</h3>
+                    <p>A TF-IDF relevance search ranks the closest entries from the curated legal knowledge base.</p>
+                </div>
+                <div class="step-card">
+                    <span class="step-num">03</span>
+                    <h3>Get a clear verdict</h3>
+                    <p>Legal, illegal, or conditional — with the actual section, your rights, and next steps.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="category-preview">
+            <h2 class="section-title">Browse by situation</h2>
+            <div class="chip-row" id="landingCategories"></div>
+        </section>
+    </template>
+
+    <template id="tpl-auth">
+        <section class="auth-screen">
+            <div class="auth-card">
+                <div class="auth-card-header">
+                    <h1 id="authTitle">Sign in</h1>
+                    <p id="authSubtitle">Welcome back. Your saved rights are right where you left them.</p>
+                </div>
+
+                <div class="role-toggle" id="roleToggle">
+                    <button type="button" class="role-opt active" data-role="citizen">Citizen</button>
+                    <button type="button" class="role-opt" data-role="tourist">Tourist</button>
+                </div>
+
+                <form id="authForm" class="auth-form" novalidate>
+                    <div class="field" id="fieldFullName">
+                        <label for="fullName">Full name</label>
+                        <input type="text" id="fullName" name="full_name" autocomplete="name"
+                            placeholder="e.g. Ashwin Kumar">
+                    </div>
+                    <div class="field" id="fieldNationality">
+                        <label for="nationality">Nationality <span class="optional">(optional)</span></label>
+                        <input type="text" id="nationality" name="nationality"
+                            placeholder="e.g. Indian, German, Japanese">
+                    </div>
+                    <div class="field">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" autocomplete="email" required
+                            placeholder="you@example.com">
+                    </div>
+                    <div class="field">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" autocomplete="current-password" required
+                            placeholder="••••••••">
+                    </div>
+
+                    <p class="form-error" id="authError" role="alert"></p>
+
+                    <button type="submit" class="btn btn-primary btn-block" id="authSubmitBtn">Sign in</button>
+                </form>
+
+                <p class="auth-switch">
+                    <span id="authSwitchText">New here?</span>
+                    <button type="button" class="link-btn" id="authSwitchBtn">Create an account</button>
+                </p>
+
+                <details class="demo-note">
+                    <summary>Demo / admin access</summary>
+                    <p>Admin login: <code>admin@nyayasahayak.gov.in</code> / <code>Admin@123</code></p>
+                </details>
+            </div>
+        </section>
+    </template>
+
+    <template id="tpl-dashboard">
+        <section class="dash">
+            <div class="dash-header">
+                <div>
+                    <p class="dash-eyebrow" id="dashEyebrow">Citizen workspace</p>
+                    <h1 id="dashGreeting">Welcome back</h1>
+                </div>
+                <div class="search-box-wrap">
+                    <form id="searchForm" class="search-box" role="search">
+                        <svg class="search-icon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+                            <circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2" />
+                            <line x1="21" y1="21" x2="16.65" y2="16.65" stroke="currentColor" stroke-width="2" />
+                        </svg>
+                        <input type="text" id="searchInput" placeholder="e.g. Can a shop refuse to give me a bill?"
+                            autocomplete="off">
+                        <button type="submit" class="btn btn-primary">Ask</button>
+                    </form>
+                    <p class="search-hint">Describe what happened — who's involved, what they did or asked for.</p>
+                </div>
+            </div>
+
+            <div id="searchResultsWrap" class="search-results-wrap hidden">
+                <div class="search-results-header">
+                    <h2>Results for <span id="searchedQueryText"></span></h2>
+                    <button class="link-btn" id="clearSearchBtn">Clear</button>
+                </div>
+                <div id="searchResults" class="results-grid"></div>
+            </div>
+
+            <div id="touristPanel" class="tourist-panel hidden">
+                <h2 class="section-title-sm">Tourist essentials</h2>
+                <div class="tourist-grid">
+                    <div class="tourist-card">
+                        <h3>🚨 Emergency numbers</h3>
+                        <ul>
+                            <li><strong>112</strong> — All-in-one emergency (police/fire/ambulance)</li>
+                            <li><strong>1930</strong> — Cybercrime / financial fraud helpline</li>
+                            <li><strong>1363 / 1800-11-1363</strong> — Tourist helpline (24x7, multilingual)</li>
+                            <li><strong>1915</strong> — National Consumer Helpline</li>
+                        </ul>
+                    </div>
+                    <div class="tourist-card">
+                        <h3>⚠ Common scams to know</h3>
+                        <ul>
+                            <li>Taxi/auto meter tampering or "meter not working" excuses</li>
+                            <li>Fake "government approved" shops on city tours</li>
+                            <li>Hotels asking to retain your original passport</li>
+                            <li>Unofficial "guides" near monuments demanding fees</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dash-section">
+                <div class="dash-section-header">
+                    <h2 class="section-title-sm">Browse rights by category</h2>
+                </div>
+                <div class="chip-row" id="dashCategories"></div>
+                <div id="categoryEntries" class="results-grid"></div>
+            </div>
+
+            <div class="dash-section" id="savedSection">
+                <div class="dash-section-header">
+                    <h2 class="section-title-sm">Your saved rights</h2>
+                    <span class="count-pill" id="savedCount">0</span>
+                </div>
+                <div id="savedQueries" class="results-grid"></div>
+                <p class="empty-state hidden" id="savedEmptyState">Nothing saved yet — when you find a useful answer,
+                    tap <strong>Save</strong> to keep it here.</p>
+            </div>
+        </section>
+    </template>
+
+    <template id="tpl-entry-detail-modal">
+        <div class="modal-backdrop" id="entryModalBackdrop">
+            <div class="modal entry-modal" role="dialog" aria-modal="true">
+                <button class="modal-close" id="entryModalClose" aria-label="Close">✕</button>
+                <div id="entryModalBody"></div>
+            </div>
+        </div>
+    </template>
+
+    <template id="tpl-admin">
+        <section class="admin">
+            <div class="admin-header">
+                <div>
+                    <p class="dash-eyebrow">Admin console</p>
+                    <h1>Knowledge base management</h1>
+                </div>
+                <button class="btn btn-primary" id="newEntryBtn">+ New legal entry</button>
+            </div>
+
+            <div class="stats-row" id="statsRow"></div>
+
+            <div class="admin-tabs">
+                <button class="admin-tab active" data-tab="entries">Legal entries</button>
+                <button class="admin-tab" data-tab="users">Users</button>
+            </div>
+
+            <div id="adminEntriesPanel" class="admin-panel">
+                <div class="table-wrap">
+                    <table class="admin-table" id="entriesTable">
+                        <thead>
+                            <tr>
+                                <th>Situation</th>
+                                <th>Category</th>
+                                <th>Verdict</th>
+                                <th>Tourist?</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="entriesTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="adminUsersPanel" class="admin-panel hidden">
+                <div class="table-wrap">
+                    <table class="admin-table" id="usersTable">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Joined</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </template>
+
+    <template id="tpl-entry-form-modal">
+        <div class="modal-backdrop" id="entryFormBackdrop">
+            <div class="modal entry-form-modal" role="dialog" aria-modal="true">
+                <button class="modal-close" id="entryFormClose" aria-label="Close">✕</button>
+                <h2 id="entryFormTitle">New legal entry</h2>
+                <form id="entryForm" class="entry-form">
+                    <input type="hidden" id="entryId">
+                    <div class="field">
+                        <label for="entrySituation">Situation (the question users will search for)</label>
+                        <input type="text" id="entrySituation" required placeholder="Can a ___ do ___ without ___?">
+                    </div>
+                    <div class="field-row">
+                        <div class="field">
+                            <label for="entryCategory">Category</label>
+                            <select id="entryCategory" required>
+                                <option value="police">Police</option>
+                                <option value="tenant">Tenant</option>
+                                <option value="consumer">Consumer</option>
+                                <option value="tourist">Tourist</option>
+                                <option value="cybercrime">Cybercrime</option>
+                                <option value="property">Property</option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label for="entryVerdict">Verdict</label>
+                            <select id="entryVerdict" required>
+                                <option value="legal">Legal</option>
+                                <option value="illegal">Illegal</option>
+                                <option value="conditional">Conditional</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label for="entrySimple">Simple explanation</label>
+                        <textarea id="entrySimple" rows="2" required></textarea>
+                    </div>
+                    <div class="field">
+                        <label for="entryLegal">Legal explanation</label>
+                        <textarea id="entryLegal" rows="3" required></textarea>
+                    </div>
+                    <div class="field">
+                        <label for="entryLawRef">Law reference (Act &amp; Section)</label>
+                        <input type="text" id="entryLawRef" required placeholder="e.g. BNSS 2023, Section 100">
+                    </div>
+                    <div class="field">
+                        <label for="entryRights">Your rights</label>
+                        <textarea id="entryRights" rows="2" required></textarea>
+                    </div>
+                    <div class="field">
+                        <label for="entryExceptions">Exceptions <span class="optional">(optional)</span></label>
+                        <textarea id="entryExceptions" rows="2"></textarea>
+                    </div>
+                    <div class="field">
+                        <label for="entryNextSteps">What to do next</label>
+                        <textarea id="entryNextSteps" rows="2" required></textarea>
+                    </div>
+                    <div class="field">
+                        <label for="entryKeywords">Extra search keywords <span class="optional">(optional,
+                                space-separated)</span></label>
+                        <input type="text" id="entryKeywords" placeholder="e.g. phone seizure mobile privacy">
+                    </div>
+                    <label class="checkbox-field">
+                        <input type="checkbox" id="entryTouristRelevant">
+                        <span>Show this in Tourist mode</span>
+                    </label>
+
+                    <p class="form-error" id="entryFormError" role="alert"></p>
+
+                    <div class="entry-form-actions">
+                        <button type="button" class="btn btn-ghost" id="entryFormCancel">Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="entryFormSubmit">Save entry</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </template>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
