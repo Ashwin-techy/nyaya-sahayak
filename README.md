@@ -6,9 +6,11 @@ A full-stack web app that helps Indian citizens and tourists understand their le
 
 ## Live Demo
 
-- Frontend: _[add Render link here after deployment]_
-- Backend API: _[add Render link here after deployment]_
+- **App:** https://nyaya-sahayak-app.onrender.com
+- **API:** https://nyaya-sahayak.onrender.com/api/health
 - Demo admin login: `admin@nyayasahayak.gov.in` / `Admin@123`
+
+> Note: hosted on Render's free tier — the first request after a period of inactivity can take up to ~50 seconds while the server wakes up. Subsequent requests are fast.
 
 ## What it does
 
