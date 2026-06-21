@@ -3,7 +3,7 @@
    Vanilla JS, no build step. Talks to the Flask API at API_BASE.
    ========================================================================= */
 
-const API_BASE = "http://localhost:5000/api";
+const API_BASE = "https://nyaya-sahayak.onrender.com/api";
 
 // ---------------------------------------------------------------------
 // Auth state — JWT stored in localStorage, decoded user kept in memory
