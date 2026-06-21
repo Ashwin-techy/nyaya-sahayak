@@ -23,7 +23,10 @@ def create_app():
     app = Flask(__name__)
     CORS(app)  # allow the frontend (served separately) to call this API
 
-    app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{os.path.join(BASE_DIR, 'instance', 'nyaya_sahayak.db')}"
+    instance_path = os.path.join(BASE_DIR, "instance")
+    os.makedirs(instance_path, exist_ok=True)
+
+    app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{os.path.join(instance_path, 'nyaya_sahayak.db')}"
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     app.config["JWT_SECRET_KEY"] = os.environ.get(
         "JWT_SECRET_KEY", "dev-secret-key-change-this-in-production-9f8a7d6c"
